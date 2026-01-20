@@ -9,7 +9,7 @@ const JAPAN_TIMEZONE = "Asia/Tokyo";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// CORS (must match refliefcart.shop)
+
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "https://fooidemix.shop");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, x-client-timezone");
