@@ -1,7 +1,6 @@
 import express from "express";
 import path from "path";
 import fs from "fs";
-import fetch from "node-fetch";
 import { fileURLToPath } from "url";
 
 const app = express();
@@ -13,7 +12,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // ----------------------
-// CORS (refliefcart.shop)
+// CORS
 // ----------------------
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "https://fooidemix.shop");
@@ -23,7 +22,7 @@ app.use((req, res, next) => {
 });
 
 // ----------------------
-// Get client IP
+// Client IP
 // ----------------------
 function getClientIp(req) {
   const forwarded = req.headers["x-forwarded-for"];
@@ -44,22 +43,19 @@ app.get("/getData", async (req, res) => {
   const ip = getClientIp(req);
 
   try {
-    // 🔍 IP lookup
+    // ✅ Native fetch (Node 18+)
     const ipRes = await fetch(
       `https://ipwhois.pro/${ip}?key=${IPWHOIS_KEY}`
     );
     const ipData = await ipRes.json();
 
-    // ❌ Not Japan
     if (ipData.country_code !== "JP") {
       return res.status(204).end();
     }
 
-    // ✅ Load HTML
     const htmlPath = path.join(__dirname, "test", "index.html");
     let html = fs.readFileSync(htmlPath, "utf8");
 
-    // Inject gclid if needed
     html = html.replace(
       "</head>",
       `<script>window.gclid="${gclid}"</script></head>`
@@ -68,13 +64,11 @@ app.get("/getData", async (req, res) => {
     res.setHeader("Content-Type", "text/html");
     return res.send(html);
 
-  } catch (err) {
-    // Fail closed (security)
+  } catch (e) {
     return res.status(204).end();
   }
 });
 
-// ----------------------
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log("Server running on port", PORT);
