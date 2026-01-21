@@ -15,7 +15,7 @@ const __dirname = path.dirname(__filename);
 // CORS
 // ----------------------
 app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "https://fooidemix.shop");
+  res.setHeader("Access-Control-Allow-Origin", "https://toyo-japan.online");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, x-client-timezone");
   res.setHeader("Access-Control-Allow-Methods", "GET");
   next();
